@@ -4,7 +4,7 @@ import './App.css';
 import Auth from './components/Auth';
 import Layout from './components/Layout';
 import Notification from './components/Notification';
-import { uiActions } from './store/ui-slice';
+import { sendCartData } from './store/cart-slice';
 let firstRender = true;
 
 function App() {
@@ -18,43 +18,8 @@ function App() {
       firstRender = false;
       return;
     }
-    const sendRequest = async () => {
-      // Send state as Sending request
-      dispatch(
-        uiActions.showNotification({
-          open: true,
-          type: 'warning',
-          message: 'Sending Request',
-        })
-      );
-      const res = await fetch(
-        'https://redux-http-demo-default-rtdb.firebaseio.com/cartItems.json',
-        {
-          method: 'PUT',
-          body: JSON.stringify(cart),
-        }
-      );
-      const data = await res.json();
-      // Send state as Request successful
-      dispatch(
-        uiActions.showNotification({
-          open: true,
-          type: 'success',
-          message: 'Send Request To Database Successfully',
-        })
-      );
-    };
-    sendRequest().catch((err) => {
-      // Send state as Error
-      dispatch(
-        uiActions.showNotification({
-          open: true,
-          type: 'error',
-          message: 'Sending Request Failed',
-        })
-      );
-    });
-  }, [cart]);
+    dispatch(sendCartData(cart));
+  }, [cart, dispatch]);
 
   return (
     <div className="App">
