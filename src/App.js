@@ -4,7 +4,7 @@ import './App.css';
 import Auth from './components/Auth';
 import Layout from './components/Layout';
 import Notification from './components/Notification';
-import { sendCartData } from './store/cart-slice';
+import { fetchData, sendCartData } from './store/cart-actions';
 let firstRender = true;
 
 function App() {
@@ -14,11 +14,16 @@ function App() {
   const notification = useSelector((state) => state.ui.notification);
 
   useEffect(() => {
+    dispatch(fetchData());
+    // it will cause a rerender
+    // console.log('fetchdata-regular-render');
+  }, [dispatch]);
+  useEffect(() => {
     if (firstRender) {
       firstRender = false;
       return;
     }
-    dispatch(sendCartData(cart));
+    if (cart.changed) dispatch(sendCartData(cart));
   }, [cart, dispatch]);
 
   return (
